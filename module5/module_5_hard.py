@@ -2,10 +2,18 @@
 from time import sleep
 
 
+class User():
+    def __init__(self, nickname, password, age):
+        self.nickname = nickname
+        self.password = hash(password)
+        self.age = age
+
+
 class UrTube:
     '''
     Видеотека
     '''
+
     def __init__(self):
         self.videoteka = []
         self.current_user = None
@@ -13,20 +21,15 @@ class UrTube:
 
     def add(self, *other):
         for item in other:
-            elem = {}
-            elem["title"] = item.title
-            elem["duration"] = item.duration
-            elem["time_now"] = item.time_now
-            elem["adult_mode"] = item.adult_mode
-            self.videoteka.append(elem)
+            self.videoteka.append(item)
 
     def get_videos(self, str):
         films = len(self.videoteka)
         found = []
         str = str.lower()
         for i in range(0, films):
-            if str in self.videoteka[i]['title'].lower():
-                found.append(self.videoteka[i]['title'])
+            if str in self.videoteka[i].title.lower():
+                found.append(self.videoteka[i].title)
         if len(found):
             return found
         else:
@@ -34,13 +37,13 @@ class UrTube:
 
     def age_user(self):
         for item in self.users:
-            if item['nickname'] == self.current_user:
-                return item['age']
+            if item.nickname == self.current_user:
+                return item.age
 
     def one_video(self, title):
         films = len(self.videoteka)
         for i in range(0, films):
-            if title == self.videoteka[i]['title']:
+            if title == self.videoteka[i].title:
                 return i
         print(f'Фильм "{title}" не найден')
 
@@ -55,22 +58,22 @@ class UrTube:
 
         if len(self.users) > 0:
             for item in self.users:
-                if item['nickname'] == nickname:
+                if item.nickname == nickname:
                     print(f'Пользователь {nickname} уже существует')
                     return
 
-        user = {}
-        user["nickname"] = nickname
-        user["password"] = hash(password)
-        user["age"] = age
-        self.users.append(user)
+        # user = {}
+        # user["nickname"] = nickname
+        # user["password"] = hash(password)
+        # user["age"] = age
+        self.users.append(User(nickname, hash(password), age))
         self.current_user = nickname
 
     def log_in(self, nickname, password):
         if len(self.users) > 0:
             for item in self.users:
-                if item['nickname'] == nickname:
-                    if item['password'] == hash(password):
+                if item.nickname == nickname:
+                    if item.password == hash(password):
                         self.current_user = nickname
                     else:
                         print('Пароль не верный')
@@ -92,13 +95,13 @@ class UrTube:
             return
         i = self.one_video(title)
         if i != None:
-            duration = self.videoteka[i]['duration']
-            time_now = self.videoteka[i]['time_now']
+            duration = self.videoteka[i].duration
+            time_now = self.videoteka[i].time_now
             for sek in range(time_now, duration):
                 print(sek, end=' ')
                 sleep(0.5)
             print("Конец видео", end='\n')
-            self.videoteka[i]['time_now'] = 0
+            self.videoteka[i].time_now = 0
 
     def log_out(self):
         self.current_user = None
@@ -112,11 +115,7 @@ class Video:
         self.adult_mode = adult_mode
 
 
-class User():
-    def __init__(self, nickname, password, age):
-        self.nickname = nickname
-        self.password = hash(password)
-        self.age = age
+
 
 
 
