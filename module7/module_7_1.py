@@ -6,7 +6,7 @@ class Product:
         self.category = category
 
     def __str__(self):
-        return (f"{self.name}, {self.weight}, {self.category}")
+        return (f"{self.name}, {self.weight}, {self.category}\n")
 
 
 class Shop:
@@ -14,22 +14,22 @@ class Shop:
 
     def get_products(self):
         file = open(self.__file_name, 'r')
-        tear = file.read()
+        spisok_tovarov = file.read()
         file.close()
-        return tear
+        return spisok_tovarov
 
-    def add(self, *tov):
+    def add(self, *tovar):
 
-        tear = self.get_products()
+        spisok_tovarov = self.get_products()
         file = open(self.__file_name, 'a')
-        for item in tov:
-            t = str(item)
-            if not (t in tear):
-                tear += t
-                file.write(t)
-                file.write('\n')
+        for item in tovar:
+            product = str(item)
+            if not (product in spisok_tovarov):
+                spisok_tovarov += product
+                file.write(product)
+
             else:
-                print(f'Продукт  {t}  уже есть в магазине')
+                print(f'Продукт  {product}  уже есть в магазине')
 
 
 
