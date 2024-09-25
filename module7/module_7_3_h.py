@@ -1,3 +1,4 @@
+#Домашнее задание по теме "Оператор "with".
 class WordsFinder:
     filter = [',', '.', '=', '!', '?', ';', ':', ' - ', ')', '(']
 
@@ -20,21 +21,21 @@ class WordsFinder:
                     word_in_line = txt.split()
                     words = words + word_in_line
                 self.all_words[item] = words
+
     def get_all_words(self):
 
-
-
-
         return self.all_words
+
     def find(self, word):
         word_f = word.lower()
 
         i = 0
         for name, words in self.all_words.items():
             for one_word in words:
-                i +=1
+                i += 1
                 if one_word == word_f:
                     return {name: i}
+
     def count(self, word):
         word_f = word.lower()
         count = {}
@@ -43,7 +44,7 @@ class WordsFinder:
             for one_word in words:
                 if one_word == word_f:
                     i = i + 1
-            if i>0 :
+            if i > 0:
                 count[name] = i
         if len(count) == 0:
             return (f'Слово "{word}" не найдено')
