@@ -94,8 +94,6 @@ class Cube(Figure):
         '''
 
         return self.get_sides()[0] ** 3
-class Sixter(Figure):
-    sides_count = 6
 
 
 if __name__ == "__main__":
