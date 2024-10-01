@@ -17,8 +17,7 @@ class Knight(Thread):
             self.days += 1
             sleep(1)
             self.voin -= self.power
-            if self.voin > 0:
-                print(f'{self.name} сражается {self.days} {self.str_day()}, осталось {self.voin} воинов.')
+            print(f'{self.name} сражается {self.days} {self.str_day()}, осталось {self.voin} воинов.')
         print(f'{self.name} всех победил спустя {self.days} {self.str_day()}!')
 
     def str_day(self):
