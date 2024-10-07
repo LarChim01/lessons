@@ -32,13 +32,13 @@ if __name__ == "__main__":
     stop = datetime.datetime.now()
     print(stop - start)
 
-
-    # start = datetime.datetime.now()
-    # with multiprocessing.Pool(processes=4) as pool:
-    #     pool.map(read_info, filenames)
-    #     stop = datetime.datetime.now()
-    # print(stop - start)
-    #
-
+    # многопроцесный подход
+    '''
+    start = datetime.datetime.now()
+    with multiprocessing.Pool(processes=4) as pool:
+        pool.map(read_info, filenames)
+        stop = datetime.datetime.now()
+    print(stop - start)
+    '''
 
 
