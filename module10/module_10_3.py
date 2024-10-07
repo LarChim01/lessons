@@ -1,4 +1,7 @@
-# Домашнее задание по теме "Блокировки и обработка ошибок"
+омашнее задание по теме "Блокировки и обработка ошибок"
+
+# Цель: освоить блокировки потоков, используя объекты класса Lock и его методы.
+#
 # Задача "Банковские операции":
 # Необходимо создать класс Bank со следующими свойствами:
 #
@@ -20,71 +23,78 @@
 #     Будет совершать 100 транзакций снятия.
 #     Снятие - это уменьшение баланса на случайное целое число от 50 до 500.
 #     В начале должно выводится сообщение "Запрос на <случайное число>".
-#     Далее производится проверка: если случайное число меньше или равно текущему балансу, то произвести снятие, уменьшив balance на соответствующее число и вывести на экран "Снятие: <случайное число>. Баланс: <текущий баланс>".
-#     Если случайное число оказалось больше баланса, то вывести строку "Запрос отклонён, недостаточно средств" и заблокировать поток методом acquire.
+#     Далее производится проверка: если случайное число меньше или равно текущему балансу, то произвести снятие, уменьшив balance
+#     на соответствующее число и вывести на экран "Снятие: <случайное число>. Баланс: <текущий баланс>".
+#     Если случайное число оказалось больше баланса, то вывести строку "Запрос отклонён, недостаточно средств" и заблокировать
+#     поток методом acquire.
 #
 # Далее создайте объект класса Bank и создайте 2 потока для его методов deposit и take. Запустите эти потоки.
 # После конца работы потоков выведите строку: "Итоговый баланс: <баланс объекта Bank>".
 #
 # По итогу вы получите скрипт разблокирующий поток до баланса равному 500 и больше или блокирующий, когда происходит попытка снятия при недостаточном балансе.
+# Пример результата выполнения программы:
+# Исходный код:
+# class Bank:
+# def __init__(self):
+# ....
+# def deposit(self):
+# ...
+# def take(self):
+# ...
+#
+# bk = Bank()
+#
+# # Т.к. методы принимают self, в потоки нужно передать сам объект класса Bank
+# th1 = threading.Thread(target=Bank.deposit, args=(bk,))
+# th2 = threading.Thread(target=Bank.take, args=(bk,))
+#
+# th1.start()
+# th2.start()
+# th1.join()
+# th2.join()
+#
+# print(f'Итоговый баланс: {bk.balance}')
+
+
 from threading import Thread, Lock
 import random
 from time import sleep
-
-
-class Bank:
+class Bank():
     def __init__(self):
-        self.balance = 0
         self.lock = Lock()
-        self.deposit_finish = False  # переменная указывает, что пополнение не закончено
-        self.block = None
-
+        self.balance = 0
     def deposit(self):
         for i in range(100):
-            if self.lock.locked():
+            #print(i,"-",self.lock.locked())
+            tranzak = random.randint(50,500)
+            self.balance += tranzak
+            if self.lock.locked() and self.balance >= 500:
                 self.lock.release()
-            self.lock.acquire()
-            self.block = 'Dep'
-            tranz = random.randint(50, 500)
-            self.balance += tranz
-            print(f"Пополнение: {tranz}. Баланс: {self.balance}")
-            sleep(0.01)
+            print(f"Пополнение: {tranzak}. Баланс: {self.balance}")
+            sleep(0.001)
 
-            if self.lock.locked() and self.balance > 500:
-                self.lock.release()
-                self.block = None
-
-        self.deposit_finish = True  # пополнение счёта завершено
 
     def take(self):
         for i in range(100):
-            tranz = random.randint(50, 500)
-            print(f'Запрос на {tranz}')
-
-            if self.balance >= tranz: # если баланс больше запрашиваемой суммы уменьшаем его
-                self.balance -= tranz
-                print(f"Снятие: {tranz}. Баланс: {self.balance}")
+            tranzak = random.randint(50, 500)
+            print(f'Запрос на {tranzak}')
+            if tranzak <= self.balance:
+                self.balance -= tranzak
+                print(f"Снятие: {tranzak}. Баланс: {self.balance}")
+                sleep(0.001)
             else:
-                print(f"Запрос отклонён, недостаточно средств")
-                if self.deposit_finish:
-                    break
-                elif self.block == 'Dep' and self.lock.locked():
-                    self.lock.release()
-                    self.block = None
+                print("Запрос отклонён, недостаточно средств")
+                self.lock.acquire()
 
-                else:
-                    self.block = 'Take'
-                    self.lock.acquire()
-            sleep(0.01)
 
-bk = Bank()
 
-# Т.к. методы принимают self, в потоки нужно передать сам объект класса Bank
-th1 = Thread(target=Bank.deposit, args=(bk,))
-th2 = Thread(target=Bank.take, args=(bk,))
+if __name__ == "__main__":
+    bk = Bank()
+    th1 = Thread(target=Bank.deposit, args=(bk,))
+    th2 = Thread(target=Bank.take, args=(bk,))
 
-th1.start()
-th2.start()
-th1.join()
-th2.join()
-print(f"Итоговый баланс: {bk.balance}")
+    th1.start()
+    th2.start()
+    th1.join()
+    th2.join()
+    print(f'Итоговый баланс: {bk.balance}')
