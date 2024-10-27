@@ -39,22 +39,18 @@ class TournamentTest(unittest.TestCase):
         self.b2 = runner.Runner('Ник', 3)
 
     def test_start(self):
-        t1 = runner.Tournament(90, self.b, self.b1, self.b2)
-        t2 = runner.Tournament(90, self.b, self.b2)
-        t3 = runner.Tournament(90, self.b2, self.b)
-        t4 = runner.Tournament(90, self.b1, self.b)
-        t5 = runner.Tournament(90, self.b2, self.b)
-
+        t1 = runner.Tournament(90, self.b,  self.b2)
+        t2 = runner.Tournament(90, self.b1, self.b2)
+        t3 = runner.Tournament(90, self.b,self.b1, self.b2)
         i = 0
-        for item in (t5, t2, t3, t4, t5, t1):
+        for item in (t1, t2, t3):
             i += 1
-            
+
             self.all_results[i] = item.start()
 
 
     @classmethod
     def tearDownClass(cls):
-        # print(cls.all_results)
         for i in cls.all_results:
             print(f'Забег №{i}')
             for key, value in cls.all_results[i].items():
@@ -65,4 +61,3 @@ class TournamentTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
