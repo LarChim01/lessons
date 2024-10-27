@@ -32,22 +32,35 @@ class TournamentTest(unittest.TestCase):
     def setUpClass(cls):
         cls.all_results={}
 
-
     def setUp(self):
         self.b = runner.Runner('Усэйн', 10)
         self.b1 = runner.Runner('Андрей', 9)
         self.b2 = runner.Runner('Ник', 3)
 
     def test_start(self):
-        t1 = runner.Tournament(90, self.b,  self.b2)
+        t1 = runner.Tournament(90, self.b, self.b2)
         t2 = runner.Tournament(90, self.b1, self.b2)
-        t3 = runner.Tournament(90, self.b,self.b1, self.b2)
+        t3 = runner.Tournament(90, self.b, self.b1, self.b2)
+        t4 = runner.Tournament(90, self.b2, self.b1, self.b)
         i = 0
-        for item in (t1, t2, t3):
+        for item in (t1, t2, t3, t4):
             i += 1
+            min_ = min(item.participants, key=lambda obj: (obj.speed,)).name
+            max_ = max(item.participants, key=lambda obj: (obj.speed,)).name
+            result = item.start()
+            max_p = result[max(list(result.keys()))].name
+            min_p = result[max(list(result.keys()))].name
+            self.last_run(min_, max_p)
+            self.all_results[i] = result
 
-            self.all_results[i] = item.start()
+    def last_run(self, min_, last):
+        ''' проверка, что бегун с наименьшей скоростью придёт последним'''
+        self.assertEqual(min_, last)
 
+    def first_run(self, max_, first):
+        ''' проверка, что бегун с самой большой скоростью придёт первым'''
+
+        self.assertEqual(max_, first)
 
     @classmethod
     def tearDownClass(cls):
