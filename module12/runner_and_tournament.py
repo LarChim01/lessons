@@ -30,7 +30,7 @@ class Tournament:
     def start(self):
         finishers = {}
 
-        self.participants.sort(reverse=True, key=lambda obj: (obj.speed, ))
+        #self.participants.sort(reverse=True, key=lambda obj: (obj.speed, ))
         place = 1
         while self.participants:
 
@@ -40,45 +40,7 @@ class Tournament:
                 if participant.distance >= self.full_distance:
                     finishers[place] = participant
                     place += 1
+                    participant.distance = 0 #обнуление дистанции участника
                     self.participants.remove(participant)
 
         return finishers
-
-if __name__ == "__main__":
-    b=Runner('Усэйн',10)
-    b1 = Runner('Андрей', 9)
-    b2 = Runner('Ник',3)
-    t1 = Tournament(90, b,b2)
-    t2 = Tournament(90, b1,  b2)
-    t3 = Tournament(90,  b, b1, b2)
-    result={}
-
-    #
-    # result[3] = t3.start()
-    # result[2] = t2.start()
-    # result[1] = t1.start()
-
-
-
-    i = 0
-    for item in (t1,t2,t3):
-        i += 1
-        item
-
-        result[i] = item.start()
-
-    for i in result:
-        print(f'Забег № {i}')
-
-        for key, value in result[i].items():
-            print(f'{key} : {value}')
-
-
-
-
-    # for key, value in result.values():
-    #     print(f"{key}: {value} : {type(value)}")
-    '''
-      Бегун по имени Усэйн, со скоростью 10.
-     Бегун по имени Андрей, со скоростью 9.
-     Бегун по имени Ник, со скоростью 3.'''
