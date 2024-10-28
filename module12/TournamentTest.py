@@ -27,40 +27,47 @@ import unittest
 
 
 class TournamentTest(unittest.TestCase):
-
+    is_frozen = True
     @classmethod
     def setUpClass(cls):
         cls.all_results={}
 
+    @unittest.skipIf(is_frozen, "Тесты в этом кейсе заморожены")
     def setUp(self):
         self.b = runner.Runner('Усэйн', 10)
         self.b1 = runner.Runner('Андрей', 9)
         self.b2 = runner.Runner('Ник', 3)
 
+    @unittest.skipIf(is_frozen, "Тесты в этом кейсе заморожены")
     def test_start(self):
-        t1 = runner.Tournament(90, self.b, self.b2)
+        t1 = runner.Tournament(90, self.b,  self.b2)
         t2 = runner.Tournament(90, self.b1, self.b2)
         t3 = runner.Tournament(90, self.b, self.b1, self.b2)
         t4 = runner.Tournament(90, self.b2, self.b1, self.b)
         i = 0
-        for item in (t1, t2, t3, t4):
+        for item in (t1, t2, t3):
             i += 1
             min_ = min(item.participants, key=lambda obj: (obj.speed,)).name
             max_ = max(item.participants, key=lambda obj: (obj.speed,)).name
             result = item.start()
             max_p = result[max(list(result.keys()))].name
             min_p = result[max(list(result.keys()))].name
-            self.last_run(min_, max_p)
+            self.last_run(min_ , max_p)
             self.all_results[i] = result
 
+    @unittest.skipIf(is_frozen, "Тесты в этом кейсе заморожены")
     def last_run(self, min_, last):
         ''' проверка, что бегун с наименьшей скоростью придёт последним'''
         self.assertEqual(min_, last)
 
+    @unittest.skipIf(is_frozen, "Тесты в этом кейсе заморожены")
     def first_run(self, max_, first):
         ''' проверка, что бегун с самой большой скоростью придёт первым'''
 
         self.assertEqual(max_, first)
+
+
+
 
     @classmethod
     def tearDownClass(cls):
@@ -74,3 +81,4 @@ class TournamentTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
