@@ -46,12 +46,12 @@ class UserState(StatesGroup):
 @dp.message_handler(text='Рассчитать')
 async def main_menu(message):
     await message.answer("Выберите опцию:", reply_markup = kb_i)
-
+    await call.answer()
 
 @dp.callback_query_handler(text='formulas')
 async def set_formulas(call):
     await call.message.answer('Норма калорий по формуле Миффлина - Сан Жеора\n для мужчин: 10 х вес (кг) + 6,25 x рост (см) – 5 х возраст (г) + 5\nдля женщин: 10 x вес (кг) + 6,25 x рост (см) – 5 x возраст (г) – 161')
-
+    await call.answer()
 
 @dp.callback_query_handler(text='calories')
 async def set_age(call):
