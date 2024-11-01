@@ -94,7 +94,7 @@ async def set_send_calories(message, state):
 
 @dp.message_handler(text='Информация')
 async def inform(message):
-    await message.answer('Норма калорий по формуле Миффлина - Сан Жеора\n для мужчин: 10 х вес (кг) + 6,25 x рост (см) – 5 х возраст (г) + 5\nдля женщин: 10 x вес (кг) + 6,25 x рост (см) – 5 x возраст (г) – 161')
+    await message.answer('Это тренировочный бот не ждите от него много!')
 
 @dp.message_handler(commands=['start'])
 async def start_message(message):
