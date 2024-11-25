@@ -9,8 +9,8 @@ users = []
 
 class User(BaseModel):
     id: int = None
-    username: str
-    age: int
+    username: str = 'UrbanUser'
+    age: int = 20
 
     @field_validator('age')
     def check_age(cls, value):
@@ -19,11 +19,6 @@ class User(BaseModel):
         elif value > 120:
             raise ValueError('Возраст не может быть больше 120 лет')
         return value
-
-    @field_validator('username')
-    def check_username(cls, value):
-        if len(value) > 20:
-            raise ValueError('Имя пользователя не более 20 символов')
 
 
 def get_index(li, target):
@@ -38,13 +33,12 @@ async def get_all() -> List[User]:
     return users
 
 
-@app.post('/user/{username}/{age}')
+@app.post('/user')
 async def insert_user(user: User) -> str:
     try:
         max_id = max(users, key=attrgetter('id')).id
     except:
         max_id = 0
-
     user.id = max_id + 1
     users.append(user)
 
@@ -55,22 +49,25 @@ async def insert_user(user: User) -> str:
 async def update_user(user_id: Annotated[int, Path(ge=1, le=120, description='Enter User ID', example='2')]
                       , username: Annotated[
             str, Path(min_length=5, max_length=20, description='Enter username', example='UrbanUser')]
-                      , age: Annotated[int, Path(ge=18, le=120, description='Enter Age', example='24')]) -> str:
+                      , age: Annotated[int, Path(ge=18, le=120, description='Enter Age', example='24')]) -> User:
     try:
         ind = get_index(users, user_id)
+        old_user = users[ind]
         users[ind].username = username
         users[ind].age = age
-        return f'User №{user_id} is deleted'
+        return users[ind]
     except IndexError:
         raise HTTPException(status_code=404, detail="User was not found")
 
 
 @app.delete('/user/{user_id}')
-async def user_delete(user_id: Annotated[int, Path(ge=1, le=120, description='Enter User ID', example='2')]) ->str:
+async def user_delete(user_id: Annotated[int, Path(ge=1, le=120, description='Enter User ID', example='2')]) -> User:
     try:
         ind = get_index(users, user_id)
+        user = users[ind]
         users.pop(ind)
-        return f'User №{user_id} is deleted'
+        return user
+        #return f'User №{user_id} is deleted'
     except IndexError:
         raise HTTPException(status_code=404, detail="User was not found")
 
@@ -79,3 +76,4 @@ async def user_delete(user_id: Annotated[int, Path(ge=1, le=120, description='En
 def kill_users_all() -> str:
     users.clear()
     return "All users deleted!"
+    
